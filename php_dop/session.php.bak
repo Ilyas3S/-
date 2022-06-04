@@ -1,0 +1,15 @@
+<?
+if (isset($_SESSION['login'])) {
+	echo "	<div class='d-flex flex-column mt-1  me-1 col-1 align-items-end'>
+				<a class='btn btn-warning ratio ratio1x1 border border-3 rounded flex-grow-1' style='overflow:hidden;' href='lichkab.php' role='button'>
+					<span class='h6 pt-1'>". $_SESSION['login'] ."</span>
+				</a>
+				<a href='?exit=1'>Выйти</a>
+			 </div>";
+	} else {
+		echo "	<div class='avt'>
+					<a class='btn btn-primary' href='avtoriz.php' role='button'>Авторизация</a>
+					<div class='reg'><a href='reg.php'>Регистрация</a></div>
+				</div>";
+}
+?>

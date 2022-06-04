@@ -1,0 +1,26 @@
+<header class="d-flex justify-content-between align-items-center bg-success bg-opacity-50 gap-3 shadow">
+	<div class="col-2"><img src="images/logo.svg" style="" class="ratio ratio-4x3 w-75"></div>
+
+	<form class="d-flex flex-grow-1 mb-0" id="Find">
+	  	<input class="form-control me-2 shadow" type="search" placeholder="Поиск по адресу..." id="field_find">
+	  	<button class="btn btn-success shadow" type="submit">Найти</button>
+	</form>
+
+	<a class="btn btn-warning shadow" href="newob.php">Разместить объявление</a>
+	<?
+		if (isset($_SESSION['login'])) {
+			foreach ($_GET as $key => $value) $get = $get . $key . '=' . $value . '&';
+			echo "	<div class='d-flex flex-column mt-1 me-1 col-1 align-items-end'>
+						<a class='btn bg-gradient bg-info ratio ratio-4x3 border border-3 rounded flex-grow-1 shadow' style='overflow:hidden;' href='lichkab.php' role='button'>
+							<span class='h6 pt-1'>". $_SESSION['login'] ."</span>
+						</a>
+						<a href='?". $get ."exit=1'>Выйти</a>
+					 </div>";
+			} else {
+				echo "	<div class='me-1 d-flex flex-column'>
+							<a class='btn btn-primary shadow' href='avtoriz.php' role='button'>Авторизация</a>
+							<div class='align-self-end shadow'><a href='reg.php' style='color:white'>Регистрация</a></div>
+						</div>";
+		}
+	?>
+</header>

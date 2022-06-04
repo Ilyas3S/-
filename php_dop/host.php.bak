@@ -1,0 +1,68 @@
+<?
+
+$link = mysqli_connect('localhost','root','');
+if (!mysqli_select_db($link,'arenda')) {
+    mysqli_query($link,'CREATE DATABASE arenda');
+    mysqli_select_db($link,'arenda');
+}
+if (!mysqli_query($link,"SELECT * FROM users LIMIT 1")) {
+	mysqli_query($link, "CREATE TABLE users (
+									id INTEGER AUTO_INCREMENT PRIMARY KEY, 
+									login VARCHAR(50), 
+									password varchar(255), 
+									email varchar(50),
+									phone VARCHAR(15), 
+									agent INTEGER(1) DEFAULT 0, 
+									date_reg VARCHAR(12),
+									avatar VARCHAR(255))"
+				);
+	mysqli_query($link, "INSERT INTO users (id, login, password, email, phone, agent, date_reg, avatar) VALUES (NULL, 'Ilyas', '1234', 'w@mail.ru', '89194067672', 1, '20.04.2022','ava.png');");
+}
+if (!mysqli_query($link,"SELECT * FROM adverts LIMIT 1")) {
+	mysqli_query($link, "CREATE TABLE adverts (
+									id INTEGER AUTO_INCREMENT PRIMARY KEY, 
+									id_users INTEGER, 
+									price INTEGER, 
+									description VARCHAR(255), 
+									image VARCHAR(512), 
+									rooms INTEGER, 
+									town VARCHAR(70), 
+									address VARCHAR(128), 
+									date VARCHAR(12), 
+									bron INTEGER DEFAULT 0,
+									FOREIGN KEY (id_users) REFERENCES users (id))"
+				);
+	mysqli_query($link, "INSERT INTO adverts (id, id_users, price, description, image, rooms, town, address, date) 
+						VALUES (NULL, 1,20000, 'Лучший', 'logo.svg,kvartira.jpg', 1, 'Магнитогорск', 'пр.Карла-Маркса д.7 кв.1', '21.04.2022');");
+}
+
+function echo_much_ad(array $data) {
+	$img_list = array();
+	foreach ($data as $dat) {
+		$img_list[] = explode(',',$dat['image']);
+	}
+
+	if ($data != []) {
+		$out = "";
+		$i = 0;
+		foreach ($data as $dat) {
+			$out = $out . 
+				"<div class='container-fluid bg-light pole4'>
+					<div class='border rounded border-primary pole4t1'>
+						<img src='images/". ($dat['image'] != '' ? ("homes/" . $img_list[$i][0]) : 'logo.svg') ."' style='width:150px;height:150px;' class='w-100'>
+					</div>
+					<div class='pole4t2'>
+						<h3>". $dat['price'] ." ₽</h3>
+						<p>". $dat['description'] ."</p>
+						<p><a href='konkret.php?id_advert=". $dat['id'] ."'>Перейти</a>
+					</div>
+				</div>";
+				$i++;
+			}
+			echo $out;
+		}
+		else
+			echo "<p class='fs-3'>Ничего не найдено</p>";
+				
+}
+?>

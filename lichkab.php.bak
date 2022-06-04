@@ -1,0 +1,304 @@
+<?
+include "php_dop/host.php";
+include "php_dop/session.php";
+if ($_GET['exit'] == 0)
+	header("Location: index.php");
+
+$query = "SELECT id, login, email, phone, agent, date_reg, avatar
+								FROM users 
+								WHERE email = '" . $_SESSION['email'] . "'";
+
+$result_user = mysqli_query($link, $query);
+for ($data_user = []; $row = mysqli_fetch_assoc($result_user); $data_user[] = $row);	
+$id_user = $data_user[0]['id'];
+
+$query = "SELECT id, price, description, image
+								FROM adverts
+								WHERE id_users = " . $id_user;
+
+$result = mysqli_query($link, $query);
+for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row);	
+
+//print_r($query);
+
+function phone(string $p) {
+	$out = $p[0].'-('.$p[1].$p[2].$p[3].')-'.$p[4].$p[5].$p[6].'-'.$p[7].$p[8].'-'.$p[9].$p[10];
+	return $out;
+}
+?>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Личный кабинет</title> 
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script type="text/javascript" src="jquery.js"></script>
+		<script src="jquery-ui/jquery-ui.js"></script>
+		<link rel="stylesheet" href="jquery-ui/jquery-ui.css">
+		<style>
+		body
+		{
+		background-image:url(images/fon.jpg);
+		}
+		header
+		{
+		display:flex;
+		justify-content:center;
+		background-color:9fd4ba;
+		margin-top:15px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1326px;
+		}
+		.blo
+		{
+		margin-left:50px;
+		}
+		.newgo
+		{
+		margin-top:10px;
+		margin-left:50px;
+		margin-right:10px;
+		}
+		.avt
+		{
+		margin-top:10px;
+		margin-left:10px;
+		height:50px;
+		margin-right:10px;
+		}
+		.reg
+		{
+		margin-left:10px;		
+		}
+		.poisk
+		{
+		display:grid;
+		margin-left:80px;
+		margin-top:25px;
+		width:1000%;
+		height:50px;
+		}
+		footer
+		{
+		display:flex;
+		justify-content:center;
+		background-color:9fd4ba;
+		margin-top:15px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1326px;
+		}
+		.textfootera
+		{
+		display:inline;
+		}
+		.kroshka
+		{
+		display:flex;
+		background-color:white;
+		margin-top:5px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1326px;
+		}
+		.pole1
+		{
+		display:inline-block;
+		justify-content:center;
+		background-color:white;
+		margin-top:15px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1326px;
+		height:525px;
+		}
+		.pole2
+		{
+		display:flex;
+		background-color:#8bfcda;
+		margin-top:15px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1286px;
+		height:180px;
+		}	
+		.pole2t1
+		{
+		display:flex;
+		justify-content:left;
+		margin-top:15px;
+		margin-left:20px;
+		margin-bottom:160px;
+		width:12%;
+		}
+		.pole2t2
+		{
+		display:flex;
+		justify-content:left;
+		margin-top:10px;
+		margin-bottom:160px;
+		width:44%;
+		}
+		.pla
+		{
+		margin-top:20px;
+		margin-left:20px;
+		}
+		.pole2t3
+		{
+		display:flex;
+		justify-content:center;
+		margin-top:10px;
+		margin-bottom:160px;
+		width:44%;
+		}
+		.redpr
+		{
+		margin-top:20px;
+		margin-left:280px;
+		}
+		.pole3
+		{
+		display:flex;
+		justify-content:left;
+		background-color:#8bfcda;
+		margin-left:20px;
+		margin-right:20px;
+		width:1286px;
+		height:70px;
+		}
+		.pole3t1
+		{
+		display:inline;
+		margin-left:20px;
+		}
+		.zagg
+		{
+		margin-top:20px;
+		margin-left:20px;
+		}
+		.pole4
+		{
+		display:flex;
+		background-color:#8bfcda;
+		margin-top:20px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1286px;
+		height:180px;
+		}
+		.pole4t1
+		{
+		margin-top:15px;
+		margin-left:15px;
+		}
+		.pole4t2
+		{
+		margin-top:15px;
+		margin-left:15px;
+		}
+		</style>
+	</head>
+
+	<body>
+		
+		<header>
+			<div class="blo"><img src="images/logo.svg" style="width:150px;height=150px;"></div>
+			
+			<div class="poisk">
+				<form class="d-flex" id="Find">
+					<input class="form-control me-2" type="search" placeholder="Поиск по адресу..." id="field_find">
+					<button class="btn btn-outline-success" type="submit">Найти</button>
+				</form>
+			</div>
+			
+			<div class="newgo"><a class="btn btn-primary" href="newob.php" role="button">Разместить объявление</a></div>
+			
+			<div class='d-flex flex-column mt-1  me-1 col-1 align-items-end'>
+				<a class='btn btn-warning ratio ratio1x1 border border-3 rounded mb-1 flex-grow-1' style='overflow:hidden; href='lichkab.php' role='button'>
+					<span class='h6 pt-1'><?echo $_SESSION['login'] ?></span>
+				</a>
+				<a class="" href='?exit=1'>Выйти</a>
+			</div>
+		</header>
+		
+		<div class="kroshka">
+			<nav aria-label="breadcrumb">
+			  <ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="index.php">Главная</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Личный кабинет</li>
+			  </ol>
+			</nav>
+		</div>
+		
+		<div class="pole1 container-fluid">
+			<div class="pole2 container-fluid">
+				<div class="pole2t1">
+					<img src="images/avatar/<? echo ((strlen($data_user[0]['avatar']) > 3) ? trim($data_user[0]['avatar']) : 'ava.png'); ?>" class="rounded-circle" style="width:150px;height:150px;">
+				</div>
+			
+				<div class="pole2t2">
+					<div class="pla">
+						<h5><?echo $data_user[0]['login']; ?></h5>
+						<p>Дата регистрации - <?echo $data_user[0]['date_reg']; ?></p>
+						<u><? echo ($data_user[0]['agent'] ? 'Агент' : 'Собственник'); ?></u>
+					</div>	
+				</div>	
+			
+				<div class="pole2t3">
+					<div class="redpr"><a class="btn btn-primary" href="" role="button">Редактировать профиль</a></div>
+				</div>	
+			</div>
+			
+			<div class="pole3">
+				<div class="pole3t1">
+					<p>Номер телефона - <? echo phone($data_user[0]['phone']) ?></p></p>
+					<p>E-mail - <? echo $data_user[0]['email'] ?></p>
+				</div>
+			</div>
+			
+			<div class="zagg"><h5>Ваши объявления</h5></div>
+			<div class="container-fluid">
+			<?
+				echo_much_ad($data);
+			?>
+			</div>
+		</div>
+		
+		<footer>
+			<div class="textfootera">
+				<p>Авторы сайта - Жунусов Ильяс, Вдовенко Дмитрий, Горбунов Алексей</p>
+				<p>Наше местоположение - Россия, Челябинская область, Магнитогорск, проспект Ленина 38</p>
+				<p>Наша почта - Arenda24on7hours@gmail.com</p>
+				<p>Наш номер телефона - 8-(3519)-59-66-00</p>
+				<p>&#169; Arenda24on7hoursCorporation</p>
+			</div>
+		</footer>
+		
+	</body>
+	
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+</html>
+<?
+mysqli_close($link);
+?>
+<script>
+$('#field_find').autocomplete({
+	source: 'php_dop/complete_find.php'
+})
+$('#Find').submit(function(e) {
+	e.preventDefault();
+	var find = $('#field_find').val();
+	$.ajax({
+		url: 'php_dop/setcookie.php',
+		data: {find:find},
+		method: 'post',
+		async: false,
+		success: function() {
+			//$(location).attr('href',url);
+			window.location.href = 'index.php';
+		}
+	})
+})
+</script>

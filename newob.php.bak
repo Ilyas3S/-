@@ -1,0 +1,274 @@
+<?
+if (!isset($_COOKIE[session_name()])) {
+	header("Location: avtoriz.php");
+}
+
+require_once "php_dop/DB_for_users.php";
+include "php_dop/session.php";
+if ($_GET['exit'] == 0)
+	header("Location: index.php");
+
+$connect = mysqli_connect($host="127.0.0.1",$user="root",$password="",$database="arenda");	#подключение к базе
+checkDB($connect);
+?>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Добавить объявление</title> 
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script type="text/javascript" src="jquery.js"></script>
+		<script src="jquery-ui/jquery-ui.js"></script>
+		<link rel="stylesheet" href="jquery-ui/jquery-ui.css">
+		<style>
+		body
+		{
+		background-image:url(images/fon.jpg);
+		}
+		header
+		{
+		display:flex;
+		justify-content:center;
+		background-color:9fd4ba;
+		margin-top:15px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1326px;
+		}
+		.blo
+		{
+		margin-left:50px;
+		}
+		.newgo
+		{
+		margin-top:10px;
+		margin-left:50px;
+		margin-right:10px;
+		}
+		.avt
+		{
+		margin-top:10px;
+		margin-left:10px;
+		height:50px;
+		margin-right:10px;
+		}
+		.reg
+		{
+		margin-left:10px;		
+		}
+		.poisk
+		{
+		display:grid;
+		margin-left:80px;
+		margin-top:25px;
+		width:1000%;
+		height:50px;
+		}
+		footer
+		{
+		display:flex;
+		justify-content:center;
+		background-color:9fd4ba;
+		margin-top:15px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1326px;
+		}
+		.textfootera
+		{
+		display:inline;
+		}
+		.kroshka
+		{
+		display:flex;
+		background-color:white;
+		margin-top:5px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1326px;
+		}
+		.pole1
+		{
+		display:flex;
+		justify-content:center;
+		background-color:#8bfcda;
+		margin-top:15px;
+		margin-left:20px;
+		margin-right:20px;
+		width:1326px;
+		height:400px;
+		}
+		.pole1t1
+		{
+		display:flex;
+		justify-content:left;
+		margin-top:10px;
+		margin-bottom:160px;
+		width:50%;
+		}
+		.pole1t2
+		{
+		display:flex;
+		justify-content:left;
+		margin-top:10px;
+		margin-bottom:160px;
+		width:50%;
+		}
+		.plokd
+		{
+		margin-top:30px;
+		margin-left:100px;
+		}
+		.vmes1
+		{
+		display:flex;
+		margin-top:20px;
+		}
+		.spsk
+		{
+		width:200px;
+		height:10px;
+		margin-left:5px;
+		}
+		.vmes2
+		{
+		display:inline;
+		margin-top:30px;
+		}
+		</style>
+	</head>
+	
+	<body>
+		
+		<header>
+			<div class="blo"><img src="images/logo.svg" style="width:150px;height=150px;"></div>
+			
+			<div class="poisk">
+				<form class="d-flex" id="Find">
+					<input class="form-control me-2" type="search" placeholder="Поиск по адресу..." id="field_find">
+					<button class="btn btn-outline-success" type="submit">Найти</button>
+				</form>
+			</div>
+			
+			<div class="newgo"><a class="btn btn-primary" href="newob.php" role="button">Разместить объявление</a></div>
+			
+			<div class='d-flex flex-column mt-1  me-1 col-1 align-items-end'>
+				<a class='btn btn-warning ratio ratio1x1 border border-3 rounded mb-1 flex-grow-1' style='overflow:hidden; href='lichkab.php' role='button'>
+					<span class='h6 pt-1'><?echo $_SESSION['login'] ?></span>
+				</a>
+				<a class="" href='?exit=1'>Выйти</a>
+			</div>
+		</header>
+		
+		<div class="kroshka">
+			<nav aria-label="breadcrumb">
+			  <ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="index.php">Главная</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Добавление</li>
+			  </ol>
+			</nav>
+		</div>
+		
+		<form class="pole1" method="POST" enctype="multipart/form-data">	
+			<div class="pole1t1">
+			
+				<div class="plokd" >
+				
+					<p>Введите цену за месяц проживания</p>
+					<input type="text" class="form-control" name="price" required>
+
+                    <p>Введите адрес</p>
+					<input type="text" class="form-control" name="address" required>
+					
+					<label>Загрузите изображения</label>
+					<input type="file" class="form-control" name="image" required>
+					
+					<div class="vmes1">
+						<p>Комнат в квартире</p>
+						<div class="spsk">
+							<select name="rooms">
+								 <option value="1" selected>1 комната</option>
+								 <option value="2">2 комнаты</option>
+								 <option value="3">3 и более</option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="vmes1">
+						<p>Город</p>
+						<div class="spsk">
+							<select name="town">
+							  <option>Магнитогорск</option>
+							  <option>Челябинск</option>
+							  <option>Екатеринбург</option>
+							  <option>Верхнеуральск</option>
+							  <option>Учалы</option>
+							</select>
+						</div>
+					</div>
+                </div>	
+				
+			</div>	
+			
+			<div class="pole1t2">
+				
+				<div class="vmes2">
+					<p>Введите описание</p>
+					<textarea name="description" class="form-control" placeholder="Не более 120 символов ..." id="floatingTextarea2" style="width:500px;height:150px"></textarea>
+					<input type="submit" class="btn btn-primary" style="margin-top:15px;" name="btn" value="Отправить">
+				</div>
+				
+			</div>				
+        </form>
+		<?
+        if (isset($_REQUEST["btn"])):
+            if (avatar('images/homes','image',1)):
+                $price = $_REQUEST["price"];	#цена
+                $image = $_FILES["image"]["name"];	#фото
+                $rooms = interpret($_REQUEST["rooms"]);	#кол-во  комнат
+                $town = $_REQUEST["town"];	    #город
+                $description = $_REQUEST["description"];	#описание
+                $address = $_REQUEST["address"];    #адрес
+                $date = date('d.m.Y');  #дата добавления
+                mysqli_query($connect,$query="INSERT INTO `homes` (`price`, `image`, `rooms`, `town`,`description`,`address`,`date`) 
+												VALUES ('".$price."','".$image."','".$rooms."','".$town."','".$description."','".$address."','".$date."')");
+            endif;
+        endif;
+        ?>
+		<footer>
+			<div class="textfootera">
+				<p>Авторы сайта - Жунусов Ильяс, Вдовенко Дмитрий, Горбунов Алексей</p>
+				<p>Наше местоположение - Россия, Челябинская область, Магнитогорск, проспект Ленина 38</p>
+				<p>Наша почта - Arenda24on7hours@gmail.com</p>
+				<p>Наш номер телефона - 8-(3519)-59-66-00</p>
+				<p>&#169; Arenda24on7hoursCorporation</p>
+			</div>
+		</footer>
+		
+	</body>
+	
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+</html>
+<?
+mysqli_close($connect);
+?>
+<script>
+$('#field_find').autocomplete({
+	source: 'php_dop/complete_find.php'
+})
+$('#Find').submit(function(e) {
+	e.preventDefault();
+	var find = $('#field_find').val();
+	$.ajax({
+		url: 'php_dop/setcookie.php',
+		data: {find:find},
+		method: 'post',
+		async: false,
+		success: function() {
+			//$(location).attr('href',url);
+			window.location.href = 'index.php';
+		}
+	})
+})
+</script>

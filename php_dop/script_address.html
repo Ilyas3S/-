@@ -1,0 +1,17 @@
+$('#field_find').autocomplete({
+	source: 'php_dop/complete_find.php'
+})
+$('#Find').submit(function(e) {
+	e.preventDefault();
+	var find = $('#field_find').val();
+	$.ajax({
+		url: 'setcookie.php',
+		data: {find:find},
+		method: 'post',
+		async: false,
+		success: function() {
+			//$(location).attr('href',url);
+			window.location.href = 'index.php';
+		}
+	})
+})
